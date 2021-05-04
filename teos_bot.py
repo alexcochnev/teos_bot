@@ -95,6 +95,15 @@ async def on_message(message):
 🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}
         ''')
 
+    # Очистка
+    elif message.content.lower().startswith('!очистка'):
+        resp['ales'] = ['Алес', '🤷‍♀️', '🤷‍♀️']
+        resp['lumen'] = ['Люма', '🤷‍♀️', '🤷‍♀️']
+        resp['dent'] = ['Дент', '🤷‍♀️', '🤷‍♀️']
+        resp['tanya'] = ['Таня', '🤷‍♀️', '🤷‍♀️']
+        resp['cent'] = ['Цент', '🤷‍♀️', '🤷‍♀️']
+        await message.channel.send('Респы очищены')
+
     # Ракета
     elif message.content.startswith('!ракета'):
         await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
