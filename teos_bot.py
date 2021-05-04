@@ -93,4 +93,8 @@ async def on_message(message):
 🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}
         ''')
 
+    # Ракета
+    elif message.content.startswith('!ракета'):
+        await message.channel.send(f"{message.content.replace('!ракета ', '')} получает 🚀")
+
 client.run(DISCORD_BOT_TOKEN)
