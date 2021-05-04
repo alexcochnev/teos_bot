@@ -84,7 +84,7 @@ async def on_message(message):
         resp['lumen'] = ['Люма', tp['min_kanos'], tp['max_kanos']]
         resp['dent'] = ['Дент', tp['min_kanos'], tp['max_kanos']]
         resp['tanya'] = ['Таня', tp['min_kanos'], tp['max_kanos']]
-        resp['cent'] = ['Цент', tp['min_cent'], tp['max_cent']]
+        resp['cent'] = ['Цент', '🤷‍♀️', '🤷‍♀️']
         await message.channel.send(f'''
 🌪 {resp['ales'][0]}:    Мини {resp['ales'][1]} --- Макси {resp['ales'][2]}
 🔥 {resp['lumen'][0]}:  Мини {resp['lumen'][1]} --- Макси {resp['lumen'][2]}
