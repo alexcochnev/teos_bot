@@ -36,6 +36,8 @@ async def on_ready():
 async def on_message(message):
     # if not message.content.startswith('!'):
     #     return
+    if message.author == client.user:
+        return
 
     # Алес
     if message.content.lower().startswith('!алес'):
@@ -95,6 +97,6 @@ async def on_message(message):
 
     # Ракета
     elif message.content.startswith('!ракета'):
-        await message.channel.send(f"{message.content.replace('!ракета ', '')} получает 🚀")
+        await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
 
 client.run(DISCORD_BOT_TOKEN)
