@@ -1,5 +1,5 @@
 import discord
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import re
 
 
@@ -8,7 +8,7 @@ def time_proc(message):
     if type(dt) == re.Match:
         dt = datetime.strptime(dt.group(), '%H:%M')
     else:
-        dt = datetime.now()
+        dt = datetime.now(tz=timezone(timedelta(hours=3)))
     min_kanos = dt + timedelta(hours=8)
     max_kanos = dt + timedelta(hours=24)
     min_cent = dt + timedelta(hours=11)
