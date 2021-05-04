@@ -1,1 +1,1 @@
-web: python teos_bot.py
+python teos_bot.py
