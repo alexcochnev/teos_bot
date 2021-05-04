@@ -1,8 +1,6 @@
 import discord
-import asyncio
-import requests
 
-DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.PQhb5VpKO9DmJ4kZrtedhmgy9ow'
+DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
 
 client = discord.Client()
 
