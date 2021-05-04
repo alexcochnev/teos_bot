@@ -99,4 +99,8 @@ async def on_message(message):
     elif message.content.startswith('!ракета'):
         await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
 
+    # Автор
+    elif message.content.startswith('!автор'):
+        await message.channel.send('Данный бот является собственностью Кочевника')
+
 client.run(DISCORD_BOT_TOKEN)
