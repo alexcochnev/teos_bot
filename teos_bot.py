@@ -7,7 +7,6 @@ DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️'], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️'], 'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️'],
         'dent': ['Дент', '🤷‍♀️', '🤷‍♀️'], 'cent': ['Цент', '🤷‍♀️', '🤷‍♀️']}
-
 date_string = '%d.%m %H:%M'
 
 client = discord.Client()
@@ -50,6 +49,10 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    global resp_channel
+    for channel in client.get_all_channels():
+        if channel.name == '⏳респы':
+            resp_channel = channel
 
 
 @client.event
@@ -63,31 +66,36 @@ async def on_message(message):
     if message.content.lower().startswith(('!алес', '!fktc')):
         tp = time_proc(message.content)
         resp['ales'] = ['Алес', tp['min_kanos'], tp['max_kanos']]
-        await message.channel.send(f"🌪 Алес {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🌪 Алес {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
+        await message.delete()
 
     # Люма
     elif message.content.lower().startswith(('!люма', '!люмен', '!k.vf')):
         tp = time_proc(message.content)
         resp['lumen'] = ['Люма', tp['min_kanos'], tp['max_kanos']]
-        await message.channel.send(f"🔥 Люма {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🔥 Люма {tp['die']} --- {tp['min_kanos']}")
+        await message.delete()
 
     # Дент
     elif message.content.lower().startswith(('!дент', '!ltyn')):
         tp = time_proc(message.content)
         resp['dent'] = ['Дент', tp['min_kanos'], tp['max_kanos']]
-        await message.channel.send(f"🌿 Дент {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🌿 Дент {tp['die']} --- {tp['min_kanos']}")
+        await message.delete()
 
     # Таня
     elif message.content.lower().startswith(('!таня', '!тайнор', '!nfyz')):
         tp = time_proc(message.content)
         resp['tanya'] = ['Таня', tp['min_kanos'], tp['max_kanos']]
-        await message.channel.send(f"🌊 Таня {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🌊 Таня {tp['die']} --- {tp['min_kanos']}")
+        await message.delete()
 
     # Цент
     elif message.content.lower().startswith(('!цент', '!wtyn')):
         tp = time_proc(message.content)
         resp['cent'] = ['Цент', tp['min_cent'], tp['max_cent']]
-        await message.channel.send(f"🐓 Цент {tp['die']} --- {tp['min_cent']}")
+        await resp_channel.send(f"🐓 Цент {tp['die']} --- {tp['min_cent']}")
+        await message.delete()
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
@@ -108,7 +116,7 @@ async def on_message(message):
             resp[key][1] = tp['min_kanos']
             resp[key][2] = tp['max_kanos']
         resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
-        await message.channel.send(table())
+        await resp_channel.send(table())
 
     # Очистка
     elif message.content.lower().startswith('!очистка'):
@@ -119,6 +127,10 @@ async def on_message(message):
     # Ракета
     elif message.content.startswith('!ракета'):
         await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
+
+    # Какашка
+    elif message.content.startswith('!какашка'):
+        await message.channel.send(f"{message.content.replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
 
     # Автор
     elif message.content.startswith('!автор'):
@@ -135,6 +147,7 @@ async def on_message(message):
 !релог - устанавливает респы всех боссов в соответствии с поведением после релога сервера.
 !релог 12:50 - устанавливает респы всех боссов после релога сервера в определённое время.
 !ракета @адресат - для души...
+!какашка - по просьбам трудящихся =)
 ```
         ''')
 
