@@ -73,28 +73,28 @@ async def on_message(message):
     elif message.content.lower().startswith(('!люма', '!люмен', '!k.vf')):
         tp = time_proc(message.content)
         resp['lumen'] = ['Люма', tp['min_kanos'], tp['max_kanos']]
-        await resp_channel.send(f"🔥 Люма {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🔥 Люма {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
         await message.delete()
 
     # Дент
     elif message.content.lower().startswith(('!дент', '!ltyn')):
         tp = time_proc(message.content)
         resp['dent'] = ['Дент', tp['min_kanos'], tp['max_kanos']]
-        await resp_channel.send(f"🌿 Дент {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🌿 Дент {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
         await message.delete()
 
     # Таня
     elif message.content.lower().startswith(('!таня', '!тайнор', '!nfyz')):
         tp = time_proc(message.content)
         resp['tanya'] = ['Таня', tp['min_kanos'], tp['max_kanos']]
-        await resp_channel.send(f"🌊 Таня {tp['die']} --- {tp['min_kanos']}")
+        await resp_channel.send(f"🌊 Таня {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
         await message.delete()
 
     # Цент
     elif message.content.lower().startswith(('!цент', '!wtyn')):
         tp = time_proc(message.content)
         resp['cent'] = ['Цент', tp['min_cent'], tp['max_cent']]
-        await resp_channel.send(f"🐓 Цент {tp['die']} --- {tp['min_cent']}")
+        await resp_channel.send(f"🐓 Цент {tp['die']} --- {tp['min_cent']}   (записал {message.author.display_name})")
         await message.delete()
 
     # Инфо о рб
