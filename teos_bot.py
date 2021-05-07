@@ -104,7 +104,7 @@ async def on_message(message):
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
-        date_now = datetime.strptime(datetime.now().strftime(date_string), date_string)
+        date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
         for key in resp.keys():
             try:
                 date_max = datetime.strptime(resp[key][2], date_string)
