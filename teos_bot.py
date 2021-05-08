@@ -95,15 +95,15 @@ async def on_message(message):
         return
 
     # Шар предсказаний
-    elif message.content.startswith('!шар'):
+    elif message.content.lower().startswith('!шар'):
         await message.channel.send(random.choice(ball))
 
     # Какашка
-    elif message.content.startswith('!какашка'):
+    elif message.content.lower().startswith('!какашка'):
         await message.channel.send(f"{message.content.replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
 
     # Ракета
-    elif message.content.startswith('!ракета'):
+    elif message.content.lower().startswith('!ракета'):
         await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
 
     # Алес
