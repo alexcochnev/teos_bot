@@ -100,11 +100,11 @@ async def on_message(message):
 
     # Какашка
     elif message.content.lower().startswith('!какашка'):
-        await message.channel.send(f"{message.content.replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
+        await message.channel.send(f"{message.content.lower().replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
 
     # Ракета
     elif message.content.lower().startswith('!ракета'):
-        await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
+        await message.channel.send(f"{message.content.lower().replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
 
     # Алес
     elif message.content.lower().startswith(('!алес', '!fktc')):
