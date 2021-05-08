@@ -3,17 +3,25 @@ from datetime import datetime, timedelta, timezone
 import re
 import random
 
-DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
-# DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
+# DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
+DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
 
-resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️'], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️'], 'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️'],
-        'dent': ['Дент', '🤷‍♀️', '🤷‍♀️'], 'cent': ['Цент', '🤷‍♀️', '🤷‍♀️']}
+resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
+        'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
+        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0]}
+rb_dict = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
+           'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
+           'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
+           'дент': {'name': 'dent', 'name_rus': 'Дент', 'pic': '🌿', 'type': 'kanos'},
+           'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'}}
 date_string = '%d.%m %H:%M'
+time_string = '%H:%M'
 ball = ['Бесспорно', 'Предрешено', 'Никаких сомнений', 'Определённо да', 'Можешь быть уверен в этом',
         'Мне кажется — «да»', 'Вероятнее всего', 'Хорошие перспективы', 'Знаки говорят — «да»', 'Да',
         'Пока не ясно, попробуй снова', 'Спроси позже', 'Лучше не рассказывать', 'Сейчас нельзя предсказать',
         'Сконцентрируйся и спроси опять', 'Даже не думай', 'Мой ответ — «нет»', 'По моим данным — «нет»',
         'Перспективы не очень хорошие', 'Весьма сомнительно']
+
 
 client = discord.Client()
 
@@ -28,7 +36,7 @@ def table():
         '''
 
 
-def time_proc(message):
+def calc_resp(message):
     dt = re.search(r'\b[0-2]?\d:[0-5]\d\b', message)
     if type(dt) == re.Match:
         if message.find('вчера') != -1:
@@ -44,9 +52,24 @@ def time_proc(message):
     max_kanos = dt + timedelta(hours=24)
     min_cent = dt + timedelta(hours=11)
     max_cent = dt + timedelta(hours=13)
-    return {'die': dt.strftime(date_string),
-            'min_kanos': min_kanos.strftime(date_string), 'max_kanos': max_kanos.strftime(date_string),
-            'min_cent': min_cent.strftime(date_string), 'max_cent': max_cent.strftime(date_string)}
+    return {'die': dt.strftime(time_string),
+            'min_kanos_date': min_kanos.strftime(date_string), 'min_kanos_time': min_kanos.strftime(time_string),
+            'max_kanos': max_kanos.strftime(date_string), 'min_cent_date': min_cent.strftime(date_string),
+            'min_cent_time': min_cent.strftime(time_string), 'max_cent': max_cent.strftime(date_string)}
+
+
+async def send_resp(message, rb):
+    cr = calc_resp(message.content)
+    min_date = f"min_{rb_dict[rb]['type']}_date"
+    min_time = f"min_{rb_dict[rb]['type']}_time"
+    max = f"max_{rb_dict[rb]['type']}"
+    resp[rb_dict[rb]['name']][1] = cr[min_date]
+    resp[rb_dict[rb]['name']][2] = cr[max]
+    approx = 'примерно ' if message.content.find('примерно') != -1 else ''
+    if message.content.find('тест') == -1:
+        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+        resp[rb_dict[rb]['name']][3] = send_message.id
+    await message.delete()
 
 
 @client.event
@@ -56,9 +79,12 @@ async def on_ready():
     print(client.user.id)
     print('------')
     global resp_channel
-    for channel in client.get_all_channels():
-        if channel.name == '⏳респы':
-            resp_channel = channel
+    # resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
+    # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
+    resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
+
+    # for channel in client.get_all_channels():  # получить id канала
+    #     print(channel.name, channel.id)
 
 
 @client.event
@@ -68,45 +94,37 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # Шар предсказаний
+    elif message.content.startswith('!шар'):
+        await message.channel.send(random.choice(ball))
+
+    # Какашка
+    elif message.content.startswith('!какашка'):
+        await message.channel.send(f"{message.content.replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
+
+    # Ракета
+    elif message.content.startswith('!ракета'):
+        await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
+
     # Алес
-    if message.content.lower().startswith(('!алес', '!fktc')):
-        tp = time_proc(message.content)
-        resp['ales'] = ['Алес', tp['min_kanos'], tp['max_kanos']]
-        if message.content.find('тест') == -1:
-            await resp_channel.send(f"🌪 Алес {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
-        await message.delete()
+    elif message.content.lower().startswith(('!алес', '!fktc')):
+        await send_resp(message, 'алес')
 
     # Люма
     elif message.content.lower().startswith(('!люма', '!люмен', '!k.vf')):
-        tp = time_proc(message.content)
-        resp['lumen'] = ['Люма', tp['min_kanos'], tp['max_kanos']]
-        if message.content.find('тест') == -1:
-            await resp_channel.send(f"🔥 Люма {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
-        await message.delete()
+        await send_resp(message, 'люма')
 
     # Дент
     elif message.content.lower().startswith(('!дент', '!ltyn')):
-        tp = time_proc(message.content)
-        resp['dent'] = ['Дент', tp['min_kanos'], tp['max_kanos']]
-        if message.content.find('тест') == -1:
-            await resp_channel.send(f"🌿 Дент {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
-        await message.delete()
+        await send_resp(message, 'дент')
 
     # Таня
     elif message.content.lower().startswith(('!таня', '!тайнор', '!nfyz')):
-        tp = time_proc(message.content)
-        resp['tanya'] = ['Таня', tp['min_kanos'], tp['max_kanos']]
-        if message.content.find('тест') == -1:
-            await resp_channel.send(f"🌊 Таня {tp['die']} --- {tp['min_kanos']}   (записал {message.author.display_name})")
-        await message.delete()
+        await send_resp(message, 'таня')
 
     # Цент
     elif message.content.lower().startswith(('!цент', '!wtyn')):
-        tp = time_proc(message.content)
-        resp['cent'] = ['Цент', tp['min_cent'], tp['max_cent']]
-        if message.content.find('тест') == -1:
-            await resp_channel.send(f"🐓 Цент {tp['die']} --- {tp['min_cent']}   (записал {message.author.display_name})")
-        await message.delete()
+        await send_resp(message, 'цент')
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
@@ -122,30 +140,32 @@ async def on_message(message):
 
     # Релог
     elif message.content.lower().startswith('!релог'):
-        tp = time_proc(message.content)
+        cr = calc_resp(message.content)
         for key in resp.keys():
-            resp[key][1] = tp['min_kanos']
-            resp[key][2] = tp['max_kanos']
+            resp[key][1] = cr['min_kanos_date']
+            resp[key][2] = cr['max_kanos']
         resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
+        await resp_channel.send(f"Релог {cr['die']}")
         await resp_channel.send(table())
 
     # Очистка
     elif message.content.lower().startswith('!очистка'):
-        for key in resp.keys():
-            resp[key][1] = resp[key][2] = '🤷‍♀️'
-        await message.channel.send('Респы очищены')
+        if message.content.find('все') != -1:
+            for key in resp.keys():
+                resp[key][1] = resp[key][2] = '🤷‍♀️'
+            await message.channel.send('Респы очищены')
 
-    # Ракета
-    elif message.content.startswith('!ракета'):
-        await message.channel.send(f"{message.content.replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
-
-    # Какашка
-    elif message.content.startswith('!какашка'):
-        await message.channel.send(f"{message.content.replace('!какашка ', '').replace('!какашка', '')} поймал 💩")
-
-    # Шар предсказаний
-    elif message.content.startswith('!шар'):
-        await message.channel.send(random.choice(ball))
+        for key in rb_dict.keys():
+            if message.content.find(key) != -1:
+                resp[rb_dict[key]['name']][1] = resp[rb_dict[key]['name']][2] = '🤷‍♀️'
+                if resp[rb_dict[key]['name']][3] != 0:
+                    try:
+                        found_message = await resp_channel.fetch_message(resp[rb_dict[key]['name']][3])
+                        await found_message.delete()
+                    except:
+                        pass
+                    resp[rb_dict[key]['name']][3] = 0
+                await message.channel.send(f"{rb_dict[key]['name_rus']} удалён")
 
     # Автор
     elif message.content.startswith('!автор'):
@@ -157,8 +177,10 @@ async def on_message(message):
 ```
 !алес (люма/дент/таня/цент) - записывает респ босса, которого слили только что (по МСК).
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
+!алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
 !рб - выводит актуальную информацию обо всех записанных респах. Если макси прошло - респ удаляется.
+!очистка алес - удаляет респ босса (в базе и последнюю запись о нём в канале "респы").
 !релог - устанавливает респы всех боссов в соответствии с поведением после релога сервера.
 !релог 12:50 - устанавливает респы всех боссов после релога сервера в определённое время.
 !ракета @адресат - для души...
