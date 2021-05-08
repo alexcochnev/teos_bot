@@ -79,9 +79,9 @@ async def on_ready():
     print(client.user.id)
     print('------')
     global resp_channel
-    # resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
+    resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
     # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
-    resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
+    # resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
 
     # for channel in client.get_all_channels():  # получить id канала
     #     print(channel.name, channel.id)
