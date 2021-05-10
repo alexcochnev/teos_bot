@@ -1,7 +1,11 @@
+import json
+
 import discord
 from datetime import datetime, timedelta, timezone
+from os import path
 import re
 import random
+
 
 DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
 # DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
@@ -22,6 +26,12 @@ ball = ['Бесспорно', 'Предрешено', 'Никаких сомне
         'Сконцентрируйся и спроси опять', 'Даже не думай', 'Мой ответ — «нет»', 'По моим данным — «нет»',
         'Перспективы не очень хорошие', 'Весьма сомнительно']
 
+if not path.exists('resp.json'):
+    with open('resp.json', 'w', encoding='utf-8') as r:
+        r.write(json.dumps(resp))
+
+with open('resp.json', 'r', encoding='utf-8') as r:
+    resp = json.load(r)
 
 client = discord.Client()
 
@@ -70,6 +80,8 @@ async def send_resp(message, rb):
         send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
         resp[rb_dict[rb]['name']][3] = send_message.id
     await message.delete()
+    with open('resp.json', 'w', encoding='utf-8') as r:
+        r.write(json.dumps(resp))
 
 
 @client.event
@@ -136,6 +148,8 @@ async def on_message(message):
                     resp[key][1] = resp[key][2] = '🤷‍♀️'
             except:
                 pass
+        with open('resp.json', 'w', encoding='utf-8') as r:
+            r.write(json.dumps(resp))
         await message.channel.send(table())
 
     # Релог
@@ -145,6 +159,8 @@ async def on_message(message):
             resp[key][1] = cr['min_kanos_date']
             resp[key][2] = cr['max_kanos']
         resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
+        with open('resp.json', 'w', encoding='utf-8') as r:
+            r.write(json.dumps(resp))
         await resp_channel.send(f"Релог {cr['die']}")
         await resp_channel.send(table())
 
@@ -166,6 +182,8 @@ async def on_message(message):
                         pass
                     resp[rb_dict[key]['name']][3] = 0
                 await message.channel.send(f"{rb_dict[key]['name_rus']} удалён")
+        with open('resp.json', 'w', encoding='utf-8') as r:
+            r.write(json.dumps(resp))
 
     # Автор
     elif message.content.startswith('!автор'):
