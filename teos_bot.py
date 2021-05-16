@@ -60,7 +60,7 @@ def print_table():
 
 
 def calc_resp(message):
-    dt = re.search(r'\b[0-2]?\d:[0-5]\d\b', message)
+    dt = re.search(r'\b[0-2]?\d[:][0-5]\d\b', message.replace('.', ':'))
     if type(dt) == re.Match:
         if message.find('вчера') != -1:
             dt = datetime.strptime(
