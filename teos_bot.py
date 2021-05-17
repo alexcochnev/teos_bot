@@ -130,6 +130,14 @@ async def on_message(message):
     elif message.content.lower().startswith('!ракета'):
         await message.channel.send(f"{message.content.lower().replace('!ракета ', '').replace('!ракета', '')} получает 🚀")
 
+    # Аватар
+    elif message.content.lower().startswith('!аватар'):
+        if len(message.mentions):
+            for mention in message.mentions:
+                await message.channel.send(mention.avatar_url)
+        else:
+            await message.channel.send(message.author.avatar_url)
+
     # Алес
     elif message.content.lower().startswith(('!алес', '!fktc')):
         await send_resp(message, 'алес')
@@ -213,6 +221,7 @@ async def on_message(message):
 !ракета @адресат - для души...
 !какашка @адресат - по просьбам трудящихся =)
 !шар "вопрос" - шар предсказаний, знает ответ на любые вопросы.
+!аватар @пользователь - показывает аватарку пользователя (или нескольких). Без упоминания - аватарка автора.
 ```
         ''')
 
