@@ -12,8 +12,8 @@ hostname = 'ec2-34-250-16-127.eu-west-1.compute.amazonaws.com'
 database = 'davpb8kf8pb4up'
 engine = sqlalchemy.create_engine('postgresql://' + username + ':' + password + '@' + hostname + '/' + database)
 
-DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
-# DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
+# DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
+DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
@@ -91,11 +91,11 @@ async def send_resp(message, rb):
     approx = 'примерно ' if message.content.find('примерно') != -1 else ''
     fraction = ''
     if message.content.find('уши') != -1:
-        fraction = 'уши'
+        fraction = 'уши '
     elif message.content.find('негры') != -1:
-        fraction = 'негры'
+        fraction = 'негры '
     if message.content.find('тест') == -1:
-        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {fraction} {approx}  (записал {message.author.display_name})")
+        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {fraction}{approx}  (записал {message.author.display_name})")
         resp[rb_dict[rb]['name']][3] = send_message.id
     await message.delete()
     save_to_db()
@@ -108,9 +108,9 @@ async def on_ready():
     print(client.user.id)
     print('------')
     global resp_channel
-    resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
+    # resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
     # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
-    # resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
+    resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
 
     # for channel in client.get_all_channels():  # получить id канала
     #     print(channel.name, channel.id)
