@@ -89,8 +89,13 @@ async def send_resp(message, rb):
     resp[rb_dict[rb]['name']][1] = cr[min_date]
     resp[rb_dict[rb]['name']][2] = cr[max]
     approx = 'примерно ' if message.content.find('примерно') != -1 else ''
+    fraction = ''
+    if message.content.find('уши') != -1:
+        fraction = 'уши'
+    elif message.content.find('негры') != -1:
+        fraction = 'негры'
     if message.content.find('тест') == -1:
-        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {fraction} {approx}  (записал {message.author.display_name})")
         resp[rb_dict[rb]['name']][3] = send_message.id
     await message.delete()
     save_to_db()
@@ -211,6 +216,7 @@ async def on_message(message):
         await message.channel.send('''
 ```
 !алес (люма/дент/таня/цент) - записывает респ босса, которого слили только что (по МСК).
+!алес уши/негры - записывает респ босса с указанием кто его слил.
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
 !алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
