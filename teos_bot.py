@@ -184,8 +184,9 @@ async def on_message(message):
             resp[key][1] = cr['min_kanos_date']
             resp[key][2] = cr['max_kanos']
         resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
-        await resp_channel.send(f"Релог {cr['die']}")
+        await resp_channel.send(f"Релог {cr['die']}   (записал {message.author.display_name})")
         await resp_channel.send(print_table())
+        await message.delete()
         save_to_db()
 
     # Очистка
