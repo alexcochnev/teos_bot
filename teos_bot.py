@@ -140,9 +140,11 @@ async def on_message(message):
     elif message.content.lower().startswith('!аватар'):
         if len(message.mentions):
             for mention in message.mentions:
-                await message.channel.send(mention.avatar_url)
+                # await message.channel.send(mention.avatar_url)
+                await message.channel.send(mention.avatar_url_as(static_format='png', size=4096))
         else:
-            await message.channel.send(message.author.avatar_url)
+            # await message.channel.send(message.author.avatar_url)
+            await message.channel.send(message.author.avatar_url_as(static_format='png', size=4096))
 
     # Алес
     elif message.content.lower().startswith(('!алес', '!fktc')):
@@ -166,16 +168,19 @@ async def on_message(message):
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
-        date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
-        for key in resp.keys():
-            try:
-                date_max = datetime.strptime(resp[key][2], date_string)
-                if date_max < date_now:
-                    resp[key][1] = resp[key][2] = '🤷‍♀️'
-            except:
-                pass
-        await message.channel.send(print_table())
-        save_to_db()
+        if message.channel.id in [857538469735956500, 839939523341189140, 839090077396107314]:
+            date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
+            for key in resp.keys():
+                try:
+                    date_max = datetime.strptime(resp[key][2], date_string)
+                    if date_max < date_now:
+                        resp[key][1] = resp[key][2] = '🤷‍♀️'
+                except:
+                    pass
+            await message.channel.send(print_table())
+            save_to_db()
+        else:
+            await message.channel.send('Виу-виу! Полиция Теоса! Вы пытаетесь получить доступ к конфиденциальной информации в публичном канале! Повторите свой запрос в канале #проверить-рб.')
 
     # Релог
     elif message.content.lower().startswith('!релог'):
@@ -222,7 +227,7 @@ async def on_message(message):
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
 !алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
-!рб - выводит актуальную информацию обо всех записанных респах. Если макси прошло - респ удаляется.
+!рб - Работает только в канале #проверить-рб. Выводит актуальную информацию обо всех записанных респах. Если макси прошло - респ удаляется.
 !очистка алес - удаляет респ босса (в базе и последнюю запись о нём в канале "респы").
 !релог - устанавливает респы всех боссов в соответствии с поведением после релога сервера.
 !релог 12:50 - устанавливает респы всех боссов после релога сервера в определённое время.
