@@ -6,10 +6,10 @@ import re
 import random
 import sqlalchemy
 
-username = 'wcdvvvukjlgxrd'
-password = '86fd2ee0085b777415f3d512446e7984b6e117003416d74d44278769b02c1623'
-hostname = 'ec2-34-250-16-127.eu-west-1.compute.amazonaws.com'
-database = 'davpb8kf8pb4up'
+username = 'wcybuslwenjeqm'
+password = 'aea3a07b7d566901878ff14405056e165c1efe000ec5f4a89354eeb5a78bd636'
+hostname = 'ec2-52-31-201-170.eu-west-1.compute.amazonaws.com'
+database = 'de8uasmpuej636'
 engine = sqlalchemy.create_engine('postgresql://' + username + ':' + password + '@' + hostname + '/' + database)
 
 DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
