@@ -109,7 +109,7 @@ async def on_ready():
     print('------')
     await client.change_presence(activity=discord.Game("!хелп"))
     global resp_channel
-    resp_channel = client.get_channel(542043903356829706)  # основной сервер теоса
+    resp_channel = client.get_channel(923965803219533854)  # основной сервер теоса
     # resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
     # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
 
@@ -168,7 +168,7 @@ async def on_message(message):
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
-        if message.channel.id in [857538469735956500, 839939523341189140, 839090077396107314]:
+        if message.channel.id in [923965803219533855, 839939523341189140, 839090077396107314]:
             date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
             for key in resp.keys():
                 try:
