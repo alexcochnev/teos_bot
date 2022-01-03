@@ -17,12 +17,13 @@ DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
-        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0]}
+        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0], 'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0]}
 rb_dict = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
            'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
            'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
            'дент': {'name': 'dent', 'name_rus': 'Дент', 'pic': '🌿', 'type': 'kanos'},
-           'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'}}
+           'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'},
+           'кима': {'name': 'kima', 'name_rus': 'Кима', 'pic': '🐒', 'type': 'cent'}}
 date_string = '%d.%m %H:%M'
 time_string = '%H:%M'
 ball = ['Бесспорно', 'Предрешено', 'Никаких сомнений', 'Определённо да', 'Можешь быть уверен в этом',
@@ -89,14 +90,23 @@ async def send_resp(message, rb):
     resp[rb_dict[rb]['name']][1] = cr[min_date]
     resp[rb_dict[rb]['name']][2] = cr[max]
     approx = 'примерно ' if message.content.find('примерно') != -1 else ''
-    fraction = ''
-    if message.content.find('уши') != -1:
-        fraction = 'уши '
-    elif message.content.find('негры') != -1:
-        fraction = 'негры '
+    # fraction = ''
+    # if message.content.find('уши') != -1:
+    #     fraction = 'уши '
+    # elif message.content.find('негры') != -1:
+    #     fraction = 'негры '
     if message.content.find('тест') == -1:
-        send_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {fraction}{approx}  (записал {message.author.display_name})")
-        resp[rb_dict[rb]['name']][3] = send_message.id
+        if rb == 'кима':
+            sent_message = await resp_low_zone.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+        else:
+            sent_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+        resp[rb_dict[rb]['name']][3] = sent_message.id
+        if message.content.find('уши') != -1:
+            await sent_message.add_reaction(client.get_emoji(927572831968043059))  # основной сервер теоса
+            # await sent_message.add_reaction(client.get_emoji(927573598250598491))  # 2й тестовый сервер (тест бот)
+        elif message.content.find('негры') != -1:
+            await sent_message.add_reaction(client.get_emoji(927572794462589019))  # основной сервер теоса
+            # await sent_message.add_reaction(client.get_emoji(927573589132202034))  # 2й тестовый сервер (тест бот)
     await message.delete()
     save_to_db()
 
@@ -109,12 +119,23 @@ async def on_ready():
     print('------')
     await client.change_presence(activity=discord.Game("!хелп"))
     global resp_channel
+    global resp_low_zone
     resp_channel = client.get_channel(923965803219533854)  # основной сервер теоса
     # resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
     # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
+    resp_low_zone = client.get_channel(923965803865460768)  # основной сервер теоса
+    # resp_low_zone = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
+    # resp_low_zone = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
 
     # for channel in client.get_all_channels():  # получить id канала
     #     print(channel.name, channel.id)
+
+    # guild = client.get_guild(923965802787532870)  # основной сервер теоса
+    # guild = client.get_guild(839461667989225483)  # 2й тестовый сервер (тест бот)
+    # guild = client.get_guild(839090000133095475)  # 1й тестовый сервер (прод бот)
+
+    # all_emojis = await guild.fetch_emojis()
+    # print(all_emojis)
 
 
 @client.event
@@ -166,6 +187,10 @@ async def on_message(message):
     elif message.content.lower().startswith(('!цент', '!wtyn')):
         await send_resp(message, 'цент')
 
+    # Кима
+    elif message.content.lower().startswith(('!кима', '!rbvf')):
+        await send_resp(message, 'кима')
+
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
         if message.channel.id in [923965803219533855, 839939523341189140, 839090077396107314]:
@@ -206,7 +231,10 @@ async def on_message(message):
                 resp[rb_dict[key]['name']][1] = resp[rb_dict[key]['name']][2] = '🤷‍♀️'
                 if resp[rb_dict[key]['name']][3] != 0:
                     try:
-                        found_message = await resp_channel.fetch_message(resp[rb_dict[key]['name']][3])
+                        if key == 'кима':
+                            found_message = await resp_low_zone.fetch_message(resp[rb_dict[key]['name']][3])
+                        else:
+                            found_message = await resp_channel.fetch_message(resp[rb_dict[key]['name']][3])
                         await found_message.delete()
                     except:
                         pass
@@ -223,10 +251,11 @@ async def on_message(message):
         await message.channel.send('''
 ```
 !алес (люма/дент/таня/цент) - записывает респ босса, которого слили только что (по МСК).
-!алес уши/негры - записывает респ босса с указанием кто его слил.
+!алес уши/негры - записывает респ босса и ставит смайлик кто его слил.
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
 !алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
+!кима - записывает респ кимы в респы малых зон
 !рб - Работает только в канале #проверить-рб. Выводит актуальную информацию обо всех записанных респах. Если макси прошло - респ удаляется.
 !очистка алес - удаляет респ босса (в базе и последнюю запись о нём в канале "респы").
 !релог - устанавливает респы всех боссов в соответствии с поведением после релога сервера.
