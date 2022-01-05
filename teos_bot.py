@@ -161,15 +161,15 @@ async def on_raw_reaction_remove(payload):
     if payload.message_id == CHANGE_ROLE_MESSAGE_ID:
         member = guild.get_member(payload.user_id)
         if payload.emoji.name == '🤡':
-            await member.remove_roles(role_arti, reason='Роль добавлена пользователем')
+            await member.remove_roles(role_arti, reason='Роль удалена пользователем')
         elif payload.emoji.name == '15':
-            await member.remove_roles(role_15, reason='Роль добавлена пользователем')
+            await member.remove_roles(role_15, reason='Роль удалена пользователем')
         elif payload.emoji.name == '30':
-            await member.remove_roles(role_30, reason='Роль добавлена пользователем')
+            await member.remove_roles(role_30, reason='Роль удалена пользователем')
         elif payload.emoji.name == '60':
-            await member.remove_roles(role_60, reason='Роль добавлена пользователем')
+            await member.remove_roles(role_60, reason='Роль удалена пользователем')
         elif payload.emoji.name == '🪓':
-            await member.remove_roles(role_valheim, reason='Роль добавлена пользователем')
+            await member.remove_roles(role_valheim, reason='Роль удалена пользователем')
 
 
 @client.event
