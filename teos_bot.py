@@ -1,19 +1,17 @@
-import json
-import discord
-from datetime import datetime, timedelta, timezone
-from os import path
-import re
 import random
+import re
+from datetime import datetime, timedelta, timezone
+
+import discord
 import sqlalchemy
+from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
+    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID
 
 username = 'wcybuslwenjeqm'
 password = 'aea3a07b7d566901878ff14405056e165c1efe000ec5f4a89354eeb5a78bd636'
 hostname = 'ec2-52-31-201-170.eu-west-1.compute.amazonaws.com'
 database = 'de8uasmpuej636'
 engine = sqlalchemy.create_engine('postgresql://' + username + ':' + password + '@' + hostname + '/' + database)
-
-DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
-# DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'  # тестовый бот
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
@@ -40,7 +38,7 @@ with engine.connect() as con:
         resp[row['id']][2] = row['max']
         resp[row['id']][3] = row['message_id']
 
-client = discord.Client()
+client = discord.Client(intents=discord.Intents.all())
 
 
 def save_to_db():
@@ -102,11 +100,9 @@ async def send_resp(message, rb):
             sent_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
         resp[rb_dict[rb]['name']][3] = sent_message.id
         if message.content.find('уши') != -1:
-            await sent_message.add_reaction(client.get_emoji(927572831968043059))  # основной сервер теоса
-            # await sent_message.add_reaction(client.get_emoji(927573598250598491))  # 2й тестовый сервер (тест бот)
+            await sent_message.add_reaction(client.get_emoji(AOL_EMOJI_ID))
         elif message.content.find('негры') != -1:
-            await sent_message.add_reaction(client.get_emoji(927572794462589019))  # основной сервер теоса
-            # await sent_message.add_reaction(client.get_emoji(927573589132202034))  # 2й тестовый сервер (тест бот)
+            await sent_message.add_reaction(client.get_emoji(UOF_EMOJI_ID))
     await message.delete()
     save_to_db()
 
@@ -120,22 +116,60 @@ async def on_ready():
     await client.change_presence(activity=discord.Game("!хелп"))
     global resp_channel
     global resp_low_zone
-    resp_channel = client.get_channel(923965803219533854)  # основной сервер теоса
-    # resp_channel = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
-    # resp_channel = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
-    resp_low_zone = client.get_channel(923965803865460768)  # основной сервер теоса
-    # resp_low_zone = client.get_channel(839939523341189140)  # 2й тестовый сервер (тест бот)
-    # resp_low_zone = client.get_channel(839090077396107314)  # 1й тестовый сервер (прод бот)
+
+    resp_channel = client.get_channel(RESP_CHANNEL_ID)
+    resp_low_zone = client.get_channel(RESP_LOW_ZONE_ID)
 
     # for channel in client.get_all_channels():  # получить id канала
     #     print(channel.name, channel.id)
+    global guild
+    global role_15
+    global role_30
+    global role_60
+    global role_arti
+    global role_valheim
 
-    # guild = client.get_guild(923965802787532870)  # основной сервер теоса
-    # guild = client.get_guild(839461667989225483)  # 2й тестовый сервер (тест бот)
-    # guild = client.get_guild(839090000133095475)  # 1й тестовый сервер (прод бот)
-
+    guild = client.get_guild(GUILD_ID)
+    role_15 = guild.get_role(ROLE_15_ID)
+    role_30 = guild.get_role(ROLE_30_ID)
+    role_60 = guild.get_role(ROLE_60_ID)
+    role_arti = guild.get_role(ROLE_ARTI_ID)
+    role_valheim = guild.get_role(ROLE_VALHEIM_ID)
     # all_emojis = await guild.fetch_emojis()
     # print(all_emojis)
+    # print(guild.members)
+
+
+@client.event
+async def on_raw_reaction_add(payload):
+    if payload.message_id == CHANGE_ROLE_MESSAGE_ID:
+        member = guild.get_member(payload.user_id)
+        if payload.emoji.name == '🤡':
+            await member.add_roles(role_arti, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '15':
+            await member.add_roles(role_15, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '30':
+            await member.add_roles(role_30, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '60':
+            await member.add_roles(role_60, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '🪓':
+            await member.add_roles(role_valheim, reason='Роль добавлена пользователем')
+
+
+@client.event
+async def on_raw_reaction_remove(payload):
+    if payload.message_id == CHANGE_ROLE_MESSAGE_ID:
+        member = guild.get_member(payload.user_id)
+        if payload.emoji.name == '🤡':
+            await member.remove_roles(role_arti, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '15':
+            await member.remove_roles(role_15, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '30':
+            await member.remove_roles(role_30, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '60':
+            await member.remove_roles(role_60, reason='Роль добавлена пользователем')
+        elif payload.emoji.name == '🪓':
+            await member.remove_roles(role_valheim, reason='Роль добавлена пользователем')
 
 
 @client.event
