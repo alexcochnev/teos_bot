@@ -1,11 +1,12 @@
 import random
 import re
+import time
 from datetime import datetime, timedelta, timezone
 
 import discord
 import sqlalchemy
 from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
-    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID
+    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID
 
 username = 'wcybuslwenjeqm'
 password = 'aea3a07b7d566901878ff14405056e165c1efe000ec5f4a89354eeb5a78bd636'
@@ -245,6 +246,12 @@ async def on_message(message):
 
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
+        if message.channel.id != CHECK_RB_ID:
+            sent_message = await message.channel.send(f'Для данной команды существует отдельный канал <#{CHECK_RB_ID}>, повторите запрос там')
+            time.sleep(30)
+            await message.delete()
+            await sent_message.delete()
+            return
         # if message.channel.id in [923965803219533855, 839939523341189140, 839090077396107314]:
         if message.author in role_rb.members:
             date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
