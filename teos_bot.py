@@ -247,8 +247,8 @@ async def on_message(message):
     # Инфо о рб
     elif message.content.lower().startswith('!рб'):
         if message.channel.id != CHECK_RB_ID:
-            sent_message = await message.channel.send(f'Для данной команды существует отдельный канал <#{CHECK_RB_ID}>, повторите запрос там')
-            time.sleep(30)
+            sent_message = await message.channel.send(f'Для данной команды существует отдельный канал <#{CHECK_RB_ID}>. Повторите запрос там')
+            time.sleep(20)
             await message.delete()
             await sent_message.delete()
             return
@@ -266,8 +266,6 @@ async def on_message(message):
             save_to_db()
         else:
             await message.channel.send('Недостаточно прав для использования данной команды.')
-        # else:
-        #     await message.channel.send('Виу-виу! Полиция Теоса! Вы пытаетесь получить доступ к конфиденциальной информации в публичном канале! Повторите свой запрос в канале #проверить-рб.')
 
     # Релог
     elif message.content.lower().startswith('!релог'):
