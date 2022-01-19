@@ -8,10 +8,10 @@ import sqlalchemy
 from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
     CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID
 
-username = 'wcybuslwenjeqm'
-password = 'aea3a07b7d566901878ff14405056e165c1efe000ec5f4a89354eeb5a78bd636'
-hostname = 'ec2-52-31-201-170.eu-west-1.compute.amazonaws.com'
-database = 'de8uasmpuej636'
+username = 'pewqbasdohmcrt'
+password = '1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a'
+hostname = 'ec2-52-209-185-5.eu-west-1.compute.amazonaws.com'
+database = 'dckvo0kovjlj9k'
 engine = sqlalchemy.create_engine('postgresql://' + username + ':' + password + '@' + hostname + '/' + database)
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
