@@ -1,5 +1,5 @@
 # основной сервер теоса
-DB_URL = 'ololo:1c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
+DB_URL = 'postgresql://pewqbasdohmcrt:1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
 DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
 RESP_CHANNEL_ID = 923965803219533854
 RESP_LOW_ZONE_ID = 923965803865460768
