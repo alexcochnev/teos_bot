@@ -12,7 +12,8 @@ from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_I
 
 # если хероку опять начудит с БД:
 # heroku pg:credentials:rotate -a teosdiscordbot
-DATABASE_URL = DB_URL if os.environ.get('DATABASE_URL') is None else os.environ.get('DATABASE_URL')
+DATABASE_URL = DB_URL if os.environ.get('DATABASE_URL') is None else os.environ.get('DATABASE_URL')\
+    .replace('postgres', 'postgresql')
 engine = sqlalchemy.create_engine(DATABASE_URL)
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],

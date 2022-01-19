@@ -16,7 +16,7 @@ ROLE_VALHEIM_ID = 924069314590556180
 ROLE_RB_ID = 923965802787532873
 
 # 1й тестовый сервер (прод бот)
-# DB_URL = 'postgres://pewqbasdohmcrt:1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
+# DB_URL = 'postgresql://pewqbasdohmcrt:1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
 # DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.o78O95FIlIJoI2HhG2u5lFcyXmg'
 # RESP_CHANNEL_ID = 839090077396107314
 # RESP_LOW_ZONE_ID = 839090077396107314
@@ -33,7 +33,7 @@ ROLE_RB_ID = 923965802787532873
 # ROLE_RB_ID = 0
 
 # 2й тестовый сервер (тест бот)
-# DB_URL = 'postgres://pewqbasdohmcrt:1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
+# DB_URL = 'postgresql://pewqbasdohmcrt:1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a@ec2-52-209-185-5.eu-west-1.compute.amazonaws.com:5432/dckvo0kovjlj9k'
 # DISCORD_BOT_TOKEN = 'ODM5NDYxODEzMjkyNjMwMDM4.YJJ_vA.IEnOxbcX6hkfRhcOAqFwbEQVBBw'
 # RESP_CHANNEL_ID = 839939523341189140
 # RESP_LOW_ZONE_ID = 839939523341189140
