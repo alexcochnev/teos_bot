@@ -1,18 +1,19 @@
 import random
 import re
 import time
+import os
 from datetime import datetime, timedelta, timezone
 
 import discord
 import sqlalchemy
 from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
-    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID
+    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID,\
+    DB_URL
 
-username = 'pewqbasdohmcrt'
-password = '1a9e3a15217b252a725cab93b044016ec61c9ed7c518b83c09d8d3199ef95f2a'
-hostname = 'ec2-52-209-185-5.eu-west-1.compute.amazonaws.com'
-database = 'dckvo0kovjlj9k'
-engine = sqlalchemy.create_engine('postgresql://' + username + ':' + password + '@' + hostname + '/' + database)
+# если хероку опять начудит с БД:
+# heroku pg:credentials:rotate -a teosdiscordbot
+DATABASE_URL = DB_URL if os.environ.get('DATABASE_URL') is None else os.environ.get('DATABASE_URL')
+engine = sqlalchemy.create_engine(DATABASE_URL)
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
