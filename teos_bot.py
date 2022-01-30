@@ -8,7 +8,7 @@ import discord
 import sqlalchemy
 from config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
     CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID,\
-    DB_URL
+    DB_URL, DB_TABLE
 
 # если хероку опять начудит с БД:
 # heroku pg:credentials:rotate -a teosdiscordbot
@@ -16,9 +16,12 @@ DATABASE_URL = DB_URL if os.environ.get('DATABASE_URL') is None else os.environ.
     .replace('postgres', 'postgresql')
 engine = sqlalchemy.create_engine(DATABASE_URL)
 
-resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0], 'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0],
-        'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0], 'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0],
-        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0], 'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0]}
+resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)]}
 rb_dict = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
            'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
            'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
@@ -35,7 +38,7 @@ ball = ['Бесспорно', 'Предрешено', 'Никаких сомне
 
 
 with engine.connect() as con:
-    bd_resp = con.execute('select * from teos.resp')
+    bd_resp = con.execute(f'select * from {DB_TABLE}')
     for row in bd_resp:
         resp[row['id']][1] = row['min']
         resp[row['id']][2] = row['max']
@@ -48,16 +51,16 @@ def save_to_db():
     with engine.connect() as con:
         for key in resp.keys():
             con.execution_options(autocommit=True).execute(
-                f"update teos.resp set min = '{resp[key][1]}', max = '{resp[key][2]}', message_id = '{resp[key][3]}' where id = '{key}';")
+                f"update {DB_TABLE} set min = '{resp[key][1]}', max = '{resp[key][2]}', message_id = '{resp[key][3]}' where id = '{key}';")
 
 
 def print_table():
     return f'''
-🌪 {resp['ales'][0]}:    Мини {resp['ales'][1]} --- Макси {resp['ales'][2]}
-🔥 {resp['lumen'][0]}:  Мини {resp['lumen'][1]} --- Макси {resp['lumen'][2]}
-🌿 {resp['dent'][0]}:    Мини {resp['dent'][1]} --- Макси {resp['dent'][2]}
-🌊 {resp['tanya'][0]}:    Мини {resp['tanya'][1]} --- Макси {resp['tanya'][2]}
-🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}
+🌪 {resp['ales'][0]}:    Мини {resp['ales'][1]} --- Макси {resp['ales'][2]}   {resp['ales'][4]}
+🔥 {resp['lumen'][0]}:  Мини {resp['lumen'][1]} --- Макси {resp['lumen'][2]}   {resp['lumen'][4]}
+🌿 {resp['dent'][0]}:    Мини {resp['dent'][1]} --- Макси {resp['dent'][2]}   {resp['dent'][4]}
+🌊 {resp['tanya'][0]}:    Мини {resp['tanya'][1]} --- Макси {resp['tanya'][2]}   {resp['tanya'][4]}
+🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}   {resp['cent'][4]}
         '''
 
 
@@ -84,6 +87,13 @@ def calc_resp(message):
 
 
 async def send_resp(message, rb):
+    if datetime.now(tz=timezone(timedelta(hours=3))) < (resp[rb_dict[rb]['name']][5] + timedelta(minutes=1)):
+        sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
+        time.sleep(10)
+        await message.delete()
+        await sent_message.delete()
+        return
+    resp[rb_dict[rb]['name']][5] = datetime.now(tz=timezone(timedelta(hours=3)))
     cr = calc_resp(message.content)
     min_date = f"min_{rb_dict[rb]['type']}_date"
     min_time = f"min_{rb_dict[rb]['type']}_time"
@@ -91,11 +101,6 @@ async def send_resp(message, rb):
     resp[rb_dict[rb]['name']][1] = cr[min_date]
     resp[rb_dict[rb]['name']][2] = cr[max]
     approx = 'примерно ' if message.content.find('примерно') != -1 else ''
-    # fraction = ''
-    # if message.content.find('уши') != -1:
-    #     fraction = 'уши '
-    # elif message.content.find('негры') != -1:
-    #     fraction = 'негры '
     if message.content.find('тест') == -1:
         if rb == 'кима':
             sent_message = await resp_low_zone.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
@@ -259,11 +264,16 @@ async def on_message(message):
             date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
             for key in resp.keys():
                 try:
+                    date_min = datetime.strptime(resp[key][1], date_string)
+                    if date_min < date_now:
+                        resp[key][4] = '(может встать ✅)'
+                    else:
+                        resp[key][4] = '(ещё рано ❌)'
                     date_max = datetime.strptime(resp[key][2], date_string)
                     if date_max < date_now:
                         resp[key][1] = resp[key][2] = '🤷‍♀️'
                 except:
-                    pass
+                    resp[key][4] = '(может встать ✅)'
             await message.channel.send(print_table())
             save_to_db()
         else:
@@ -276,6 +286,7 @@ async def on_message(message):
             for key in resp.keys():
                 resp[key][1] = cr['min_kanos_date']
                 resp[key][2] = cr['max_kanos']
+                resp[key][4] = ''
             resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
             await resp_channel.send(f"Релог {cr['die']}   (записал {message.author.display_name})")
             await resp_channel.send(print_table())
