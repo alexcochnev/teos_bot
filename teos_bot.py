@@ -87,9 +87,16 @@ def calc_resp(message):
 
 
 async def send_resp(message, rb):
+    if message.author.id == 394887151546007553:
+        if message.content.find('уши') == -1 and message.content.find('негры') == -1:
+            sent_message = await message.channel.send('Заманал ты уже! Ну напиши ты фракцию!')
+            time.sleep(3)
+            await message.delete()
+            await sent_message.delete()
+            return
     if datetime.now(tz=timezone(timedelta(hours=3))) < (resp[rb_dict[rb]['name']][5] + timedelta(minutes=1)):
         sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
-        time.sleep(10)
+        time.sleep(6)
         await message.delete()
         await sent_message.delete()
         return
