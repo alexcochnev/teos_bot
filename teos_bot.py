@@ -87,8 +87,9 @@ def calc_resp(message):
 
 
 async def send_resp(message, rb):
+    content = message.content.lower()
     if message.author.id == 394887151546007553:
-        if message.content.find('уши') == -1 and message.content.find('негры') == -1:
+        if content.find('уши') == -1 and content.find('негры') == -1 and content.find('ас') == -1 and content.find('ся') == -1:
             sent_message = await message.channel.send('Заманал ты уже! Ну напиши ты фракцию!')
             time.sleep(3)
             await message.delete()
@@ -101,22 +102,22 @@ async def send_resp(message, rb):
         await sent_message.delete()
         return
     resp[rb_dict[rb]['name']][5] = datetime.now(tz=timezone(timedelta(hours=3)))
-    cr = calc_resp(message.content)
+    cr = calc_resp(content)
     min_date = f"min_{rb_dict[rb]['type']}_date"
     min_time = f"min_{rb_dict[rb]['type']}_time"
     max = f"max_{rb_dict[rb]['type']}"
     resp[rb_dict[rb]['name']][1] = cr[min_date]
     resp[rb_dict[rb]['name']][2] = cr[max]
-    approx = 'примерно ' if message.content.find('примерно') != -1 else ''
-    if message.content.find('тест') == -1:
+    approx = 'примерно ' if content.find('примерно') != -1 else ''
+    if content.find('тест') == -1:
         if rb == 'кима':
             sent_message = await resp_low_zone.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
         else:
             sent_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
         resp[rb_dict[rb]['name']][3] = sent_message.id
-        if message.content.find('уши') != -1:
+        if content.find('уши') != -1 or content.find('ас') != -1:
             await sent_message.add_reaction(client.get_emoji(AOL_EMOJI_ID))
-        elif message.content.find('негры') != -1:
+        elif content.find('негры') != -1 or content.find('ся') != -1:
             await sent_message.add_reaction(client.get_emoji(UOF_EMOJI_ID))
     await message.delete()
     save_to_db()
@@ -337,7 +338,7 @@ async def on_message(message):
         await message.channel.send('''
 ```
 !алес (люма/дент/таня/цент) - записывает респ босса, которого слили только что (по МСК).
-!алес уши/негры - записывает респ босса и ставит смайлик кто его слил.
+!алес уши/негры/ас/ся - записывает респ босса и ставит смайлик кто его слил.
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
 !алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
