@@ -88,13 +88,13 @@ def calc_resp(message):
 
 async def send_resp(message, rb):
     content = message.content.lower()
-    if message.author.id == 394887151546007553:
-        if content.find('уши') == -1 and content.find('негры') == -1 and content.find('ас') == -1 and content.find('ся') == -1:
-            sent_message = await message.channel.send('Заманал ты уже! Ну напиши ты фракцию!')
-            time.sleep(3)
-            await message.delete()
-            await sent_message.delete()
-            return
+    # if message.author.id == 394887151546007553:
+    #     if content.find('уши') == -1 and content.find('негры') == -1 and content.find('ас') == -1 and content.find('ся') == -1:
+    #         sent_message = await message.channel.send('Заманал ты уже! Ну напиши ты фракцию!')
+    #         time.sleep(3)
+    #         await message.delete()
+    #         await sent_message.delete()
+    #         return
     if datetime.now(tz=timezone(timedelta(hours=3))) < (resp[rb_dict[rb]['name']][5] + timedelta(minutes=1)):
         sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
         time.sleep(6)
