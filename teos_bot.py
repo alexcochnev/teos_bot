@@ -212,10 +212,10 @@ async def on_message(message):
         if len(message.mentions):
             for mention in message.mentions:
                 # await message.channel.send(mention.avatar_url)
-                await message.channel.send(mention.avatar_url_as(static_format='png', size=4096))
+                await message.channel.send(mention.avatar.replace(static_format='png', size=4096))
         else:
             # await message.channel.send(message.author.avatar_url)
-            await message.channel.send(message.author.avatar_url_as(static_format='png', size=4096))
+            await message.channel.send(message.author.avatar.replace(static_format='png', size=4096))
 
     # Алес
     elif message.content.lower().startswith(('!алес', '!fktc')):
