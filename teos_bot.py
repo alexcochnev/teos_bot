@@ -352,4 +352,4 @@ async def on_message(message):
         ''')
 
 
-client.run(DISCORD_BOT_TOKEN)
+client.run(DISCORD_BOT_TOKEN, reconnect=True)
