@@ -59,6 +59,7 @@ def print_table():
 🌿 {resp['dent'][0]}:    Мини {resp['dent'][1]} --- Макси {resp['dent'][2]}   {resp['dent'][4]}
 🌊 {resp['tanya'][0]}:    Мини {resp['tanya'][1]} --- Макси {resp['tanya'][2]}   {resp['tanya'][4]}
 🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}   {resp['cent'][4]}
+🐒 {resp['kima'][0]}:    Мини {resp['kima'][1]} --- Макси {resp['kima'][2]}   {resp['kima'][4]}
         '''
 
 
