@@ -1,9 +1,9 @@
 import os
 
 # основной сервер теоса
-DATABASE_URL = os.environ.get('DATABASE_URL').replace('postgres', 'postgresql')
+DATABASE_URL = 'postgresql://postgres:postgres@3.68.173.107:5432/teos'
 DB_TABLE = 'teos.resp'
-DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+DISCORD_BOT_TOKEN = 'ODM5MDkyMzAzNjQ4OTE1NDc2.YJEnmg.8JCJctYLUU8DEubzOXxcyblZvzs'
 RESP_CHANNEL_ID = 923965803219533854
 RESP_LOW_ZONE_ID = 923965803865460768
 CHECK_RB_ID = 923965803219533855
