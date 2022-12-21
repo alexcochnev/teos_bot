@@ -1,3 +1,5 @@
+prod_config.py
+
 .idea/
 staticfiles/
 test_config.py

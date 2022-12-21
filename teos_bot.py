@@ -11,7 +11,7 @@ from prod_config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GU
 
 # если хероку опять начудит с БД:
 # heroku pg:credentials:rotate -a teosdiscordbot
-engine = sqlalchemy.create_engine(DATABASE_URL)
+# engine = sqlalchemy.create_engine(DATABASE_URL)
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
@@ -34,21 +34,22 @@ ball = ['Бесспорно', 'Предрешено', 'Никаких сомне
         'Перспективы не очень хорошие', 'Весьма сомнительно']
 
 
-with engine.connect() as con:
-    bd_resp = con.execute(f'select * from {DB_TABLE}')
-    for row in bd_resp:
-        resp[row['id']][1] = row['min']
-        resp[row['id']][2] = row['max']
-        resp[row['id']][3] = row['message_id']
+#with engine.connect() as con:
+#    bd_resp = con.execute(f'select * from {DB_TABLE}')
+#    for row in bd_resp:
+#        resp[row['id']][1] = row['min']
+#        resp[row['id']][2] = row['max']
+#        resp[row['id']][3] = row['message_id']
 
 client = discord.Client(intents=discord.Intents.all())
 
 
 def save_to_db():
-    with engine.connect() as con:
-        for key in resp.keys():
-            con.execution_options(autocommit=True).execute(
-                f"update {DB_TABLE} set min = '{resp[key][1]}', max = '{resp[key][2]}', message_id = '{resp[key][3]}' where id = '{key}';")
+#    with engine.connect() as con:
+#        for key in resp.keys():
+#            con.execution_options(autocommit=True).execute(
+#                f"update {DB_TABLE} set min = '{resp[key][1]}', max = '{resp[key][2]}', message_id = '{resp[key][3]}' where id = '{key}';")
+    return
 
 
 def print_table():
