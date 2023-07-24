@@ -18,12 +18,14 @@ resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.n
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+        'knight': ['Рыцарь', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)]}
 rb_dict = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
            'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
            'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
            'дент': {'name': 'dent', 'name_rus': 'Дент', 'pic': '🌿', 'type': 'kanos'},
            'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'},
+           'рыцарь': {'name': 'knight', 'name_rus': 'Рыцарь', 'pic': '🛡️', 'type': 'knight'},
            'кима': {'name': 'kima', 'name_rus': 'Кима', 'pic': '🐒', 'type': 'cent'}}
 date_string = '%d.%m %H:%M'
 time_string = '%H:%M'
@@ -59,6 +61,7 @@ def print_table():
 🌿 {resp['dent'][0]}:    Мини {resp['dent'][1]} --- Макси {resp['dent'][2]}   {resp['dent'][4]}
 🌊 {resp['tanya'][0]}:    Мини {resp['tanya'][1]} --- Макси {resp['tanya'][2]}   {resp['tanya'][4]}
 🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}   {resp['cent'][4]}
+🛡️ {resp['knight'][0]}:    Мини {resp['knight'][1]} --- Макси {resp['knight'][2]}   {resp['knight'][4]}
 🐒 {resp['kima'][0]}:    Мини {resp['kima'][1]} --- Макси {resp['kima'][2]}   {resp['kima'][4]}
         '''
 
@@ -79,10 +82,19 @@ def calc_resp(message):
     max_kanos = dt + timedelta(hours=24)
     min_cent = dt + timedelta(hours=11)
     max_cent = dt + timedelta(hours=13)
+    min_knight = dt + timedelta(hours=17)
+    max_knight = dt + timedelta(hours=19)
     return {'die': dt.strftime(time_string),
-            'min_kanos_date': min_kanos.strftime(date_string), 'min_kanos_time': min_kanos.strftime(time_string),
-            'max_kanos': max_kanos.strftime(date_string), 'min_cent_date': min_cent.strftime(date_string),
-            'min_cent_time': min_cent.strftime(time_string), 'max_cent': max_cent.strftime(date_string)}
+            'min_kanos_date': min_kanos.strftime(date_string),
+            'min_kanos_time': min_kanos.strftime(time_string),
+            'max_kanos': max_kanos.strftime(date_string),
+            'min_cent_date': min_cent.strftime(date_string),
+            'min_cent_time': min_cent.strftime(time_string),
+            'max_cent': max_cent.strftime(date_string),
+            'min_knight_date': min_knight.strftime(date_string),
+            'min_knight_time': min_knight.strftime(time_string),
+            'max_knight': max_knight.strftime(date_string)
+            }
 
 
 async def send_resp(message, rb):
@@ -254,6 +266,13 @@ async def on_message(message):
         else:
             await message.channel.send('Недостаточно прав для использования данной команды.')
 
+    # Рыцарь
+    elif message.content.lower().startswith(('!рыц', '!рыцарь', '!hsw')):
+        if message.author in role_rb.members:
+            await send_resp(message, 'рыцарь')
+        else:
+            await message.channel.send('Недостаточно прав для использования данной команды.')
+
     # Кима
     elif message.content.lower().startswith(('!кима', '!rbvf')):
         await send_resp(message, 'кима')
@@ -295,6 +314,7 @@ async def on_message(message):
                 resp[key][2] = cr['max_kanos']
                 resp[key][4] = ''
             resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
+            resp['knight'][1] = resp['knight'][2] = '🤷‍♀️'
             resp['kima'][1] = resp['kima'][2] = '🤷‍♀️'
             await resp_channel.send(f"Релог {cr['die']}   (записал {message.author.display_name})")
             await resp_channel.send(print_table())
@@ -342,6 +362,7 @@ async def on_message(message):
 !алес 12:50 - записывает респ босса, которого слили в определенное время (по МСК).
 !алес 12:50 примерно - записывает примерный респ босса. Тоже самое, только с пометкой "примерно" (по МСК).
 !алес 23:55 вчера - записывает респ босса, которого слили до 00 часов текущего дня (по МСК).
+!рыц или !рыцарь - записывает респ нового босса.
 !кима - записывает респ кимы в респы малых зон
 !рб - Работает только в канале #проверить-рб. Выводит актуальную информацию обо всех записанных респах. Если макси прошло - респ удаляется.
 !очистка алес - удаляет респ босса (в базе и последнюю запись о нём в канале "респы").
