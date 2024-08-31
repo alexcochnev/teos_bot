@@ -5,13 +5,22 @@ from datetime import datetime, timedelta, timezone
 
 import discord
 # import sqlalchemy
-from prod_config import DISCORD_BOT_TOKEN, RESP_CHANNEL_ID, RESP_LOW_ZONE_ID, GUILD_ID, AOL_EMOJI_ID, UOF_EMOJI_ID, \
-    CHANGE_ROLE_MESSAGE_ID, ROLE_15_ID, ROLE_30_ID, ROLE_60_ID, ROLE_ARTI_ID, ROLE_VALHEIM_ID, ROLE_RB_ID, CHECK_RB_ID,\
-    DATABASE_URL, DB_TABLE
-
-# если хероку опять начудит с БД:
-# heroku pg:credentials:rotate -a teosdiscordbot
-# engine = sqlalchemy.create_engine(DATABASE_URL)
+from config import (
+    DISCORD_BOT_TOKEN,
+    RESP_CHANNEL_ID,
+    RESP_LOW_ZONE_ID,
+    GUILD_ID,
+    AOL_EMOJI_ID,
+    UOF_EMOJI_ID,
+    CHANGE_ROLE_MESSAGE_ID,
+    ROLE_15_ID,
+    ROLE_30_ID,
+    ROLE_60_ID,
+    ROLE_ARTI_ID,
+    ROLE_VALHEIM_ID,
+    ROLE_RB_ID,
+    CHECK_RB_ID,
+)
 
 resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
@@ -99,19 +108,16 @@ def calc_resp(message):
 
 async def send_resp(message, rb):
     content = message.content.lower()
-    # if message.author.id == 394887151546007553:
-    #     if content.find('уши') == -1 and content.find('негры') == -1 and content.find('ас') == -1 and content.find('ся') == -1:
-    #         sent_message = await message.channel.send('Заманал ты уже! Ну напиши ты фракцию!')
-    #         time.sleep(3)
-    #         await message.delete()
-    #         await sent_message.delete()
-    #         return
     if datetime.now(tz=timezone(timedelta(hours=3))) < (resp[rb_dict[rb]['name']][5] + timedelta(minutes=1)):
         sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
+        try:
+            await message.delete()
+        except discord.errors.NotFound:
+            pass
         time.sleep(6)
-        await message.delete()
         await sent_message.delete()
         return
+
     resp[rb_dict[rb]['name']][5] = datetime.now(tz=timezone(timedelta(hours=3)))
     cr = calc_resp(content)
     min_date = f"min_{rb_dict[rb]['type']}_date"
@@ -134,6 +140,10 @@ async def send_resp(message, rb):
     save_to_db()
 
 
+async def permission_alert(message):
+    await message.channel.send('Недостаточно прав для использования данной команды.')
+
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -147,8 +157,6 @@ async def on_ready():
     resp_channel = client.get_channel(RESP_CHANNEL_ID)
     resp_low_zone = client.get_channel(RESP_LOW_ZONE_ID)
 
-    # for channel in client.get_all_channels():  # получить id канала
-    #     print(channel.name, channel.id)
     global guild
     global role_15
     global role_30
@@ -164,10 +172,6 @@ async def on_ready():
     role_arti = guild.get_role(ROLE_ARTI_ID)
     role_valheim = guild.get_role(ROLE_VALHEIM_ID)
     role_rb = guild.get_role(ROLE_RB_ID)
-
-    # all_emojis = await guild.fetch_emojis()
-    # print(all_emojis)
-    # print(guild.members)
 
 
 @client.event
@@ -236,42 +240,42 @@ async def on_message(message):
         if message.author in role_rb.members:
             await send_resp(message, 'алес')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Люма
     elif message.content.lower().startswith(('!люма', '!люмен', '!k.vf')):
         if message.author in role_rb.members:
             await send_resp(message, 'люма')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Дент
     elif message.content.lower().startswith(('!дент', '!ltyn')):
         if message.author in role_rb.members:
             await send_resp(message, 'дент')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Таня
     elif message.content.lower().startswith(('!таня', '!тайнор', '!nfyz')):
         if message.author in role_rb.members:
             await send_resp(message, 'таня')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Цент
     elif message.content.lower().startswith(('!цент', '!wtyn')):
         if message.author in role_rb.members:
             await send_resp(message, 'цент')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Рыцарь
     elif message.content.lower().startswith(('!рыц', '!рыцарь', '!hsw')):
         if message.author in role_rb.members:
             await send_resp(message, 'рыцарь')
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Кима
     elif message.content.lower().startswith(('!кима', '!rbvf')):
@@ -281,11 +285,14 @@ async def on_message(message):
     elif message.content.lower().startswith('!рб'):
         if message.channel.id != CHECK_RB_ID:
             sent_message = await message.channel.send(f'Для данной команды существует отдельный канал <#{CHECK_RB_ID}>. Повторите запрос там')
+            try:
+                await message.delete()
+            except discord.errors.NotFound:
+                pass
             time.sleep(20)
-            await message.delete()
             await sent_message.delete()
             return
-        # if message.channel.id in [923965803219533855, 839939523341189140, 839090077396107314]:
+
         if message.author in role_rb.members:
             date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
             for key in resp.keys():
@@ -303,7 +310,7 @@ async def on_message(message):
             await message.channel.send(print_table())
             save_to_db()
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Релог
     elif message.content.lower().startswith('!релог'):
@@ -321,7 +328,7 @@ async def on_message(message):
             await message.delete()
             save_to_db()
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Очистка
     elif message.content.lower().startswith('!очистка'):
@@ -347,7 +354,7 @@ async def on_message(message):
                     await message.channel.send(f"{rb_dict[key]['name_rus']} удалён")
             save_to_db()
         else:
-            await message.channel.send('Недостаточно прав для использования данной команды.')
+            await permission_alert(message)
 
     # Автор
     elif message.content.startswith('!автор'):
