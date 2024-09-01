@@ -1,0 +1,14 @@
+[Unit]
+Description=Teos bot
+After=network.target
+
+[Service]
+Type=idle
+Restart=on-failure
+User=admin
+Group=admin
+WorkingDirectory=/home/admin/teos_bot
+ExecStart=/usr/bin/python3 teos_bot.py
+
+[Install]
+WantedBy=multi-user.target
