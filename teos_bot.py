@@ -22,23 +22,23 @@ from config import (
     CHECK_RB_ID,
 )
 
-resp = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
+RESP = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3))) - timedelta(minutes=1)],
         'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'knight': ['Рыцарь', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
         'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)]}
-rb_dict = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
+RB_DICT = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
            'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
            'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
            'дент': {'name': 'dent', 'name_rus': 'Дент', 'pic': '🌿', 'type': 'kanos'},
            'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'},
            'рыцарь': {'name': 'knight', 'name_rus': 'Рыцарь', 'pic': '🛡️', 'type': 'knight'},
            'кима': {'name': 'kima', 'name_rus': 'Кима', 'pic': '🐒', 'type': 'cent'}}
-date_string = '%d.%m %H:%M'
-time_string = '%H:%M'
-ball = ['Бесспорно', 'Предрешено', 'Никаких сомнений', 'Определённо да', 'Можешь быть уверен в этом',
+DATE_STRING = '%d.%m %H:%M'
+TIME_STRING = '%H:%M'
+BALL = ['Бесспорно', 'Предрешено', 'Никаких сомнений', 'Определённо да', 'Можешь быть уверен в этом',
         'Мне кажется — «да»', 'Вероятнее всего', 'Хорошие перспективы', 'Знаки говорят — «да»', 'Да',
         'Пока не ясно, попробуй снова', 'Спроси позже', 'Лучше не рассказывать', 'Сейчас нельзя предсказать',
         'Сконцентрируйся и спроси опять', 'Даже не думай', 'Мой ответ — «нет»', 'По моим данным — «нет»',
@@ -48,30 +48,30 @@ ball = ['Бесспорно', 'Предрешено', 'Никаких сомне
 #with engine.connect() as con:
 #    bd_resp = con.execute(f'select * from {DB_TABLE}')
 #    for row in bd_resp:
-#        resp[row['id']][1] = row['min']
-#        resp[row['id']][2] = row['max']
-#        resp[row['id']][3] = row['message_id']
+#        RESP[row['id']][1] = row['min']
+#        RESP[row['id']][2] = row['max']
+#        RESP[row['id']][3] = row['message_id']
 
 client = discord.Client(intents=discord.Intents.all())
 
 
 def save_to_db():
 #    with engine.connect() as con:
-#        for key in resp.keys():
+#        for key in RESP.keys():
 #            con.execution_options(autocommit=True).execute(
-#                f"update {DB_TABLE} set min = '{resp[key][1]}', max = '{resp[key][2]}', message_id = '{resp[key][3]}' where id = '{key}';")
+#                f"update {DB_TABLE} set min = '{RESP[key][1]}', max = '{RESP[key][2]}', message_id = '{RESP[key][3]}' where id = '{key}';")
     return
 
 
 def print_table():
     return f'''
-🌪 {resp['ales'][0]}:    Мини {resp['ales'][1]} --- Макси {resp['ales'][2]}   {resp['ales'][4]}
-🔥 {resp['lumen'][0]}:  Мини {resp['lumen'][1]} --- Макси {resp['lumen'][2]}   {resp['lumen'][4]}
-🌿 {resp['dent'][0]}:    Мини {resp['dent'][1]} --- Макси {resp['dent'][2]}   {resp['dent'][4]}
-🌊 {resp['tanya'][0]}:    Мини {resp['tanya'][1]} --- Макси {resp['tanya'][2]}   {resp['tanya'][4]}
-🐓 {resp['cent'][0]}:    Мини {resp['cent'][1]} --- Макси {resp['cent'][2]}   {resp['cent'][4]}
-🛡️ {resp['knight'][0]}:    Мини {resp['knight'][1]} --- Макси {resp['knight'][2]}   {resp['knight'][4]}
-🐒 {resp['kima'][0]}:    Мини {resp['kima'][1]} --- Макси {resp['kima'][2]}   {resp['kima'][4]}
+🌪 {RESP['ales'][0]}:    Мини {RESP['ales'][1]} --- Макси {RESP['ales'][2]}   {RESP['ales'][4]}
+🔥 {RESP['lumen'][0]}:  Мини {RESP['lumen'][1]} --- Макси {RESP['lumen'][2]}   {RESP['lumen'][4]}
+🌿 {RESP['dent'][0]}:    Мини {RESP['dent'][1]} --- Макси {RESP['dent'][2]}   {RESP['dent'][4]}
+🌊 {RESP['tanya'][0]}:    Мини {RESP['tanya'][1]} --- Макси {RESP['tanya'][2]}   {RESP['tanya'][4]}
+🐓 {RESP['cent'][0]}:    Мини {RESP['cent'][1]} --- Макси {RESP['cent'][2]}   {RESP['cent'][4]}
+🛡️ {RESP['knight'][0]}:    Мини {RESP['knight'][1]} --- Макси {RESP['knight'][2]}   {RESP['knight'][4]}
+🐒 {RESP['kima'][0]}:    Мини {RESP['kima'][1]} --- Макси {RESP['kima'][2]}   {RESP['kima'][4]}
         '''
 
 
@@ -81,10 +81,10 @@ def calc_resp(message):
         if message.find('вчера') != -1:
             dt = datetime.strptime(
                 f"{(datetime.now(tz=timezone(timedelta(hours=3))) - timedelta(1)).strftime('%d.%m')} {dt.group()}",
-                date_string)
+                DATE_STRING)
         else:
             dt = datetime.strptime(f"{datetime.now(tz=timezone(timedelta(hours=3))).strftime('%d.%m')} {dt.group()}",
-                                   date_string)
+                                   DATE_STRING)
     else:
         dt = datetime.now(tz=timezone(timedelta(hours=3)))
     min_kanos = dt + timedelta(hours=8)
@@ -93,22 +93,22 @@ def calc_resp(message):
     max_cent = dt + timedelta(hours=13)
     min_knight = dt + timedelta(hours=17)
     max_knight = dt + timedelta(hours=19)
-    return {'die': dt.strftime(time_string),
-            'min_kanos_date': min_kanos.strftime(date_string),
-            'min_kanos_time': min_kanos.strftime(time_string),
-            'max_kanos': max_kanos.strftime(date_string),
-            'min_cent_date': min_cent.strftime(date_string),
-            'min_cent_time': min_cent.strftime(time_string),
-            'max_cent': max_cent.strftime(date_string),
-            'min_knight_date': min_knight.strftime(date_string),
-            'min_knight_time': min_knight.strftime(time_string),
-            'max_knight': max_knight.strftime(date_string)
+    return {'die': dt.strftime(TIME_STRING),
+            'min_kanos_date': min_kanos.strftime(DATE_STRING),
+            'min_kanos_time': min_kanos.strftime(TIME_STRING),
+            'max_kanos': max_kanos.strftime(DATE_STRING),
+            'min_cent_date': min_cent.strftime(DATE_STRING),
+            'min_cent_time': min_cent.strftime(TIME_STRING),
+            'max_cent': max_cent.strftime(DATE_STRING),
+            'min_knight_date': min_knight.strftime(DATE_STRING),
+            'min_knight_time': min_knight.strftime(TIME_STRING),
+            'max_knight': max_knight.strftime(DATE_STRING)
             }
 
 
 async def send_resp(message, rb):
     content = message.content.lower()
-    if datetime.now(tz=timezone(timedelta(hours=3))) < (resp[rb_dict[rb]['name']][5] + timedelta(minutes=1)):
+    if datetime.now(tz=timezone(timedelta(hours=3))) < (RESP[RB_DICT[rb]['name']][5] + timedelta(minutes=1)):
         sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
         try:
             await message.delete()
@@ -118,20 +118,21 @@ async def send_resp(message, rb):
         await sent_message.delete()
         return
 
-    resp[rb_dict[rb]['name']][5] = datetime.now(tz=timezone(timedelta(hours=3)))
+    RESP[RB_DICT[rb]['name']][5] = datetime.now(tz=timezone(timedelta(hours=3)))
     cr = calc_resp(content)
-    min_date = f"min_{rb_dict[rb]['type']}_date"
-    min_time = f"min_{rb_dict[rb]['type']}_time"
-    max = f"max_{rb_dict[rb]['type']}"
-    resp[rb_dict[rb]['name']][1] = cr[min_date]
-    resp[rb_dict[rb]['name']][2] = cr[max]
+    min_date = f"min_{RB_DICT[rb]['type']}_date"
+    min_time = f"min_{RB_DICT[rb]['type']}_time"
+    max = f"max_{RB_DICT[rb]['type']}"
+    RESP[RB_DICT[rb]['name']][1] = cr[min_date]
+    RESP[RB_DICT[rb]['name']][2] = cr[max]
     approx = 'примерно ' if content.find('примерно') != -1 else ''
+
     if content.find('тест') == -1:
         if rb == 'кима':
-            sent_message = await resp_low_zone.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+            sent_message = await resp_low_zone.send(f"{RB_DICT[rb]['pic']} {RB_DICT[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
         else:
-            sent_message = await resp_channel.send(f"{rb_dict[rb]['pic']} {rb_dict[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
-        resp[rb_dict[rb]['name']][3] = sent_message.id
+            sent_message = await resp_channel.send(f"{RB_DICT[rb]['pic']} {RB_DICT[rb]['name_rus']} {cr['die']} --- {cr[min_time]} {approx}  (записал {message.author.display_name})")
+        RESP[RB_DICT[rb]['name']][3] = sent_message.id
         if content.find('уши') != -1 or content.find('ас') != -1:
             await sent_message.add_reaction(client.get_emoji(AOL_EMOJI_ID))
         elif content.find('негры') != -1 or content.find('ся') != -1:
@@ -208,14 +209,12 @@ async def on_raw_reaction_remove(payload):
 
 @client.event
 async def on_message(message):
-    # if not message.content.startswith('!'):
-    #     return
-    if message.author == client.user:
+    if not message.content.startswith('!') or message.author == client.user:
         return
 
     # Шар предсказаний
     elif message.content.lower().startswith('!шар'):
-        await message.channel.send(random.choice(ball))
+        await message.channel.send(random.choice(BALL))
 
     # Какашка
     elif message.content.lower().startswith('!какашка'):
@@ -294,19 +293,19 @@ async def on_message(message):
             return
 
         if message.author in role_rb.members:
-            date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(date_string), date_string)
-            for key in resp.keys():
+            date_now = datetime.strptime(datetime.now(tz=timezone(timedelta(hours=3))).strftime(DATE_STRING), DATE_STRING)
+            for key in RESP.keys():
                 try:
-                    date_min = datetime.strptime(resp[key][1], date_string)
+                    date_min = datetime.strptime(RESP[key][1], DATE_STRING)
                     if date_min < date_now:
-                        resp[key][4] = '(может встать ✅)'
+                        RESP[key][4] = '(может встать ✅)'
                     else:
-                        resp[key][4] = '(ещё рано ❌)'
-                    date_max = datetime.strptime(resp[key][2], date_string)
+                        RESP[key][4] = '(ещё рано ❌)'
+                    date_max = datetime.strptime(RESP[key][2], DATE_STRING)
                     if date_max < date_now:
-                        resp[key][1] = resp[key][2] = '🤷‍♀️'
+                        RESP[key][1] = RESP[key][2] = '🤷‍♀️'
                 except:
-                    resp[key][4] = '(может встать ✅)'
+                    RESP[key][4] = '(может встать ✅)'
             await message.channel.send(print_table())
             save_to_db()
         else:
@@ -316,13 +315,13 @@ async def on_message(message):
     elif message.content.lower().startswith('!релог'):
         if message.author in role_rb.members:
             cr = calc_resp(message.content)
-            for key in resp.keys():
-                resp[key][1] = cr['min_kanos_date']
-                resp[key][2] = cr['max_kanos']
-                resp[key][4] = ''
-            resp['cent'][1] = resp['cent'][2] = '🤷‍♀️'
-            resp['knight'][1] = resp['knight'][2] = '🤷‍♀️'
-            resp['kima'][1] = resp['kima'][2] = '🤷‍♀️'
+            for key in RESP.keys():
+                RESP[key][1] = cr['min_kanos_date']
+                RESP[key][2] = cr['max_kanos']
+                RESP[key][4] = ''
+            RESP['cent'][1] = RESP['cent'][2] = '🤷‍♀️'
+            RESP['knight'][1] = RESP['knight'][2] = '🤷‍♀️'
+            RESP['kima'][1] = RESP['kima'][2] = '🤷‍♀️'
             await resp_channel.send(f"Релог {cr['die']}   (записал {message.author.display_name})")
             await resp_channel.send(print_table())
             await message.delete()
@@ -334,24 +333,24 @@ async def on_message(message):
     elif message.content.lower().startswith('!очистка'):
         if message.author in role_rb.members:
             if message.content.find('все') != -1:
-                for key in resp.keys():
-                    resp[key][1] = resp[key][2] = '🤷‍♀️'
+                for key in RESP.keys():
+                    RESP[key][1] = RESP[key][2] = '🤷‍♀️'
                 await message.channel.send('Респы очищены')
 
-            for key in rb_dict.keys():
+            for key in RB_DICT.keys():
                 if message.content.find(key) != -1:
-                    resp[rb_dict[key]['name']][1] = resp[rb_dict[key]['name']][2] = '🤷‍♀️'
-                    if resp[rb_dict[key]['name']][3] != 0:
+                    RESP[RB_DICT[key]['name']][1] = RESP[RB_DICT[key]['name']][2] = '🤷‍♀️'
+                    if RESP[RB_DICT[key]['name']][3] != 0:
                         try:
                             if key == 'кима':
-                                found_message = await resp_low_zone.fetch_message(resp[rb_dict[key]['name']][3])
+                                found_message = await resp_low_zone.fetch_message(RESP[RB_DICT[key]['name']][3])
                             else:
-                                found_message = await resp_channel.fetch_message(resp[rb_dict[key]['name']][3])
+                                found_message = await resp_channel.fetch_message(RESP[RB_DICT[key]['name']][3])
                             await found_message.delete()
                         except:
                             pass
-                        resp[rb_dict[key]['name']][3] = 0
-                    await message.channel.send(f"{rb_dict[key]['name_rus']} удалён")
+                        RESP[RB_DICT[key]['name']][3] = 0
+                    await message.channel.send(f"{RB_DICT[key]['name_rus']} удалён")
             save_to_db()
         else:
             await permission_alert(message)
