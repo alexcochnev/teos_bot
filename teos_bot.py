@@ -1,6 +1,7 @@
 import random
 import re
 import time
+import json
 from datetime import datetime, timedelta, timezone
 
 import discord
@@ -45,25 +46,25 @@ BALL = ['Бесспорно', 'Предрешено', 'Никаких сомне
         'Перспективы не очень хорошие', 'Весьма сомнительно']
 
 
-#with engine.connect() as con:
-#    bd_resp = con.execute(f'select * from {DB_TABLE}')
-#    for row in bd_resp:
-#        RESP[row['id']][1] = row['min']
-#        RESP[row['id']][2] = row['max']
-#        RESP[row['id']][3] = row['message_id']
+with open('resp.json', 'r') as file:
+    file_data = json.load(file)
+for key, value in file_data.items():
+    RESP[key][1], RESP[key][2], RESP[key][3] = value
 
 client = discord.Client(intents=discord.Intents.all())
 
 
-def save_to_db():
-#    with engine.connect() as con:
-#        for key in RESP.keys():
-#            con.execution_options(autocommit=True).execute(
-#                f"update {DB_TABLE} set min = '{RESP[key][1]}', max = '{RESP[key][2]}', message_id = '{RESP[key][3]}' where id = '{key}';")
-    return
+def save_to_file():
+    """ Сохранение данных в файл"""
+    file_data = {}
+    for key, value in RESP.items():
+        file_data[key] = value[1:4]
+    with open ('resp.json', 'w') as file:
+        json.dump(file_data, file)
 
 
 def print_table():
+    """ Вывод таблицы с респами"""
     return f'''
 🌪 {RESP['ales'][0]}:    Мини {RESP['ales'][1]} --- Макси {RESP['ales'][2]}   {RESP['ales'][4]}
 🔥 {RESP['lumen'][0]}:  Мини {RESP['lumen'][1]} --- Макси {RESP['lumen'][2]}   {RESP['lumen'][4]}
@@ -76,6 +77,7 @@ def print_table():
 
 
 def calc_resp(message):
+    """ Расчет времени респа"""
     dt = re.search(r'\b[0-2]?\d[:][0-5]\d\b', message.replace('.', ':'))
     if type(dt) == re.Match:
         if message.find('вчера') != -1:
@@ -107,6 +109,7 @@ def calc_resp(message):
 
 
 async def send_resp(message, rb):
+    """ Отправка сообщения о респе"""
     content = message.content.lower()
     if datetime.now(tz=timezone(timedelta(hours=3))) < (RESP[RB_DICT[rb]['name']][5] + timedelta(minutes=1)):
         sent_message = await message.channel.send('Воу-воу, полегче, не все сразу! Этого босса уже записали.')
@@ -138,15 +141,17 @@ async def send_resp(message, rb):
         elif content.find('негры') != -1 or content.find('ся') != -1:
             await sent_message.add_reaction(client.get_emoji(UOF_EMOJI_ID))
     await message.delete()
-    save_to_db()
+    save_to_file()
 
 
 async def permission_alert(message):
+    """ Оповещение о недостатке прав"""
     await message.channel.send('Недостаточно прав для использования данной команды.')
 
 
 @client.event
 async def on_ready():
+    """ Событие при запуске бота"""
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
@@ -177,6 +182,7 @@ async def on_ready():
 
 @client.event
 async def on_raw_reaction_add(payload):
+    """ Событие при добавлении реакции"""
     if payload.message_id == CHANGE_ROLE_MESSAGE_ID:
         member = guild.get_member(payload.user_id)
         if payload.emoji.name == '🤡':
@@ -193,6 +199,7 @@ async def on_raw_reaction_add(payload):
 
 @client.event
 async def on_raw_reaction_remove(payload):
+    """ Событие при снятии реакции """
     if payload.message_id == CHANGE_ROLE_MESSAGE_ID:
         member = guild.get_member(payload.user_id)
         if payload.emoji.name == '🤡':
@@ -209,6 +216,7 @@ async def on_raw_reaction_remove(payload):
 
 @client.event
 async def on_message(message):
+    """ Событие при получении сообщения"""
     if not message.content.startswith('!') or message.author == client.user:
         return
 
@@ -307,7 +315,7 @@ async def on_message(message):
                 except:
                     RESP[key][4] = '(может встать ✅)'
             await message.channel.send(print_table())
-            save_to_db()
+            save_to_file()
         else:
             await permission_alert(message)
 
@@ -325,7 +333,7 @@ async def on_message(message):
             await resp_channel.send(f"Релог {cr['die']}   (записал {message.author.display_name})")
             await resp_channel.send(print_table())
             await message.delete()
-            save_to_db()
+            save_to_file()
         else:
             await permission_alert(message)
 
@@ -351,7 +359,7 @@ async def on_message(message):
                             pass
                         RESP[RB_DICT[key]['name']][3] = 0
                     await message.channel.send(f"{RB_DICT[key]['name_rus']} удалён")
-            save_to_db()
+            save_to_file()
         else:
             await permission_alert(message)
 
