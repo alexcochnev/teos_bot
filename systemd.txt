@@ -8,6 +8,7 @@ Restart=on-failure
 User=admin
 Group=admin
 WorkingDirectory=/home/admin/teos_bot
+EnvironmentFile=/home/admin/teos_bot/teosbot.env
 ExecStart=/usr/bin/python3 teos_bot.py
 
 [Install]
