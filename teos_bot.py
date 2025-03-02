@@ -6,6 +6,8 @@ from datetime import datetime, timedelta, timezone
 
 import discord
 
+from constants import RESP, RB_DICT, DATE_STRING, TIME_STRING, BALL
+
 from config import (
     DISCORD_BOT_TOKEN,
     RESP_CHANNEL_ID,
@@ -22,28 +24,6 @@ from config import (
     ROLE_RB_ID,
     CHECK_RB_ID,
 )
-
-RESP = {'ales': ['Алес', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3))) - timedelta(minutes=1)],
-        'lumen': ['Люма', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
-        'tanya': ['Таня', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
-        'dent': ['Дент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
-        'cent': ['Цент', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
-        'knight': ['Рыцарь', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)],
-        'kima': ['Кима', '🤷‍♀️', '🤷‍♀️', 0, '', datetime.now(tz=timezone(timedelta(hours=3)))-timedelta(minutes=1)]}
-RB_DICT = {'алес': {'name': 'ales', 'name_rus': 'Алес', 'pic': '🌪', 'type': 'kanos'},
-           'люма': {'name': 'lumen', 'name_rus': 'Люма', 'pic': '🔥', 'type': 'kanos'},
-           'таня': {'name': 'tanya', 'name_rus': 'Таня', 'pic': '🌊', 'type': 'kanos'},
-           'дент': {'name': 'dent', 'name_rus': 'Дент', 'pic': '🌿', 'type': 'kanos'},
-           'цент': {'name': 'cent', 'name_rus': 'Цент', 'pic': '🐓', 'type': 'cent'},
-           'рыцарь': {'name': 'knight', 'name_rus': 'Рыцарь', 'pic': '🛡️', 'type': 'knight'},
-           'кима': {'name': 'kima', 'name_rus': 'Кима', 'pic': '🐒', 'type': 'cent'}}
-DATE_STRING = '%d.%m %H:%M'
-TIME_STRING = '%H:%M'
-BALL = ['Бесспорно', 'Предрешено', 'Никаких сомнений', 'Определённо да', 'Можешь быть уверен в этом',
-        'Мне кажется — «да»', 'Вероятнее всего', 'Хорошие перспективы', 'Знаки говорят — «да»', 'Да',
-        'Пока не ясно, попробуй снова', 'Спроси позже', 'Лучше не рассказывать', 'Сейчас нельзя предсказать',
-        'Сконцентрируйся и спроси опять', 'Даже не думай', 'Мой ответ — «нет»', 'По моим данным — «нет»',
-        'Перспективы не очень хорошие', 'Весьма сомнительно']
 
 
 with open('resp.json', 'r') as file:
@@ -91,8 +71,10 @@ def calc_resp(message):
         dt = datetime.now(tz=timezone(timedelta(hours=3)))
     min_kanos = dt + timedelta(hours=8)
     max_kanos = dt + timedelta(hours=24)
-    min_cent = dt + timedelta(hours=11)
-    max_cent = dt + timedelta(hours=13)
+    min_cent = dt + timedelta(hours=22)
+    max_cent = dt + timedelta(hours=24)
+    min_kima = dt + timedelta(hours=11)
+    max_kima = dt + timedelta(hours=13)
     min_knight = dt + timedelta(hours=17)
     max_knight = dt + timedelta(hours=19)
     return {'die': dt.strftime(TIME_STRING),
@@ -102,6 +84,9 @@ def calc_resp(message):
             'min_cent_date': min_cent.strftime(DATE_STRING),
             'min_cent_time': min_cent.strftime(TIME_STRING),
             'max_cent': max_cent.strftime(DATE_STRING),
+            'min_kima_date': min_kima.strftime(DATE_STRING),
+            'min_kima_time': min_kima.strftime(TIME_STRING),
+            'max_kima': max_kima.strftime(DATE_STRING),
             'min_knight_date': min_knight.strftime(DATE_STRING),
             'min_knight_time': min_knight.strftime(TIME_STRING),
             'max_knight': max_knight.strftime(DATE_STRING)
