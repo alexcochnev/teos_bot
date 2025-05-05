@@ -73,8 +73,8 @@ def calc_resp(message):
     max_kanos = dt + timedelta(hours=24)
     min_cent = dt + timedelta(hours=23)
     max_cent = dt + timedelta(hours=25)
-    min_kima = dt + timedelta(hours=11)
-    max_kima = dt + timedelta(hours=13)
+    min_kima = dt + timedelta(hours=12)
+    max_kima = dt + timedelta(hours=12)
     min_knight = dt + timedelta(hours=17)
     max_knight = dt + timedelta(hours=19)
     return {'die': dt.strftime(TIME_STRING),
